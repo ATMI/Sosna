@@ -1,0 +1,24 @@
+.*
+
+# git
+!.gitattributes
+!.gitignore
+!.gitkeep
+
+# GitHub
+!.github
+
+# Unity 
+/[Ll]ibrary/
+/[Tt]emp/
+/[Oo]bj/
+/[Uu]serSettings/
+/[Bb]uild/
+/[Bb]uilds/
+/[Ll]ogs/
+
+# IDE
+*.csproj
+*.unityproj
+*.sln
+*.suo
