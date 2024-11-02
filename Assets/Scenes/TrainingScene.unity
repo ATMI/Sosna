@@ -531,7 +531,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 188640526563328373, guid: be258536bd1a8a0d9a484a213f915549, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 2
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 188640526563328373, guid: be258536bd1a8a0d9a484a213f915549, type: 3}
       propertyPath: m_LocalPosition.z
@@ -689,7 +689,7 @@ MonoBehaviour:
   agentParameters:
     maxStep: 0
   hasUpgradedFromAgentParameters: 1
-  MaxStep: 0
+  MaxStep: 500000
   target: {fileID: 228666624415029370}
   safeRadius: 1
 --- !u!114 &1969390139
@@ -708,15 +708,15 @@ MonoBehaviour:
     VectorObservationSize: 16
     NumStackedVectorObservations: 1
     m_ActionSpec:
-      m_NumContinuousActions: 0
-      BranchSizes: 01000000010000000100000001000000
-    VectorActionSize: 01000000010000000100000001000000
+      m_NumContinuousActions: 4
+      BranchSizes: 
+    VectorActionSize: 04000000
     VectorActionDescriptions: []
-    VectorActionSpaceType: 0
+    VectorActionSpaceType: 1
     hasUpgradedBrainParametersWithActionSpec: 1
-  m_Model: {fileID: 0}
+  m_Model: {fileID: 5022602860645237092, guid: 4eba35c294f527a80afda76126f0fcda, type: 3}
   m_InferenceDevice: 0
-  m_BehaviorType: 1
+  m_BehaviorType: 0
   m_BehaviorName: Pathfinder
   TeamId: 0
   m_UseChildSensors: 1
@@ -872,11 +872,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 5955522278886585544, guid: 8f24c156122082117958d3da7cfb5531, type: 3}
       propertyPath: m_LocalScale.x
-      value: 1
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5955522278886585544, guid: 8f24c156122082117958d3da7cfb5531, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 5955522278886585544, guid: 8f24c156122082117958d3da7cfb5531, type: 3}
       propertyPath: m_LocalScale.z
-      value: 1
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 5955522278886585544, guid: 8f24c156122082117958d3da7cfb5531, type: 3}
       propertyPath: m_LocalPosition.x
@@ -884,7 +888,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5955522278886585544, guid: 8f24c156122082117958d3da7cfb5531, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5955522278886585544, guid: 8f24c156122082117958d3da7cfb5531, type: 3}
       propertyPath: m_LocalPosition.z

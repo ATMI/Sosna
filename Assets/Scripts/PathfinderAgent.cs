@@ -1,3 +1,4 @@
+using System;
 using Unity.MLAgents;
 using Unity.MLAgents.Actuators;
 using Unity.MLAgents.Sensors;
@@ -41,15 +42,20 @@ public class PathfinderAgent : Agent
 		EndEpisode();
 	}
 
+	private void OnCollisionStay(Collision other)
+	{
+		EndEpisode();
+	} 
+
 	public override void Heuristic(in ActionBuffers actionsOut)
 	{
 		if (_input == null) return;
 
-		var discreteActions = actionsOut.DiscreteActions;
-		discreteActions[(int)Action.Throttle] = _input.DiscreteThrottle;
-		discreteActions[(int)Action.Pitch] = _input.DiscretePitch;
-		discreteActions[(int)Action.Yaw] = _input.DiscreteYaw;
-		discreteActions[(int)Action.Roll] = _input.DiscreteRoll;
+		var continuousActions = actionsOut.ContinuousActions;
+		continuousActions[(int)Action.Throttle] = _input.Throttle * 2f - 1f;
+		continuousActions[(int)Action.Pitch] = _input.Pitch;
+		continuousActions[(int)Action.Yaw] = _input.Yaw;
+		continuousActions[(int)Action.Roll] = _input.Roll;
 	}
 
 	public override void CollectObservations(VectorSensor sensor)
@@ -65,11 +71,11 @@ public class PathfinderAgent : Agent
 
 	public override void OnActionReceived(ActionBuffers actions)
 	{
-		var discreteActions = actions.DiscreteActions;
-		_missile.Throttle = discreteActions[(int)Action.Throttle];
-		_missile.Pitch = discreteActions[(int)Action.Pitch];
-		_missile.Yaw = discreteActions[(int)Action.Yaw];
-		_missile.Roll = discreteActions[(int)Action.Roll];
+		var continuousActions = actions.ContinuousActions;
+		_missile.Throttle = (continuousActions[(int)Action.Throttle] + 1f) / 2f;
+		_missile.Pitch = continuousActions[(int)Action.Pitch];
+		_missile.Yaw = continuousActions[(int)Action.Yaw];
+		_missile.Roll = continuousActions[(int)Action.Roll];
 	}
 
 	public override void OnEpisodeBegin()
@@ -86,6 +92,7 @@ public class PathfinderAgent : Agent
 			_missile.Stop();
 			return;
 		}
+
 		Debug.LogError("Failed to spawn at random position");
 	}
 }
