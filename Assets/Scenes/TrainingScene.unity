@@ -466,6 +466,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1889977339}
+  - component: {fileID: 1889977340}
   m_Layer: 0
   m_Name: Environment
   m_TagString: Untagged
@@ -491,6 +492,19 @@ Transform:
   - {fileID: 228666624415029370}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1889977340
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1889977338}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c1bc5412242f4e0384e0c3b274c4eaee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  radius: 50
 --- !u!1001 &1969390128
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -551,9 +565,13 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 601648012152814306, guid: be258536bd1a8a0d9a484a213f915549, type: 3}
+      propertyPath: m_IsTrigger
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 708753044899929039, guid: be258536bd1a8a0d9a484a213f915549, type: 3}
       propertyPath: m_Name
-      value: Missile
+      value: Pathfinder
       objectReference: {fileID: 0}
     - target: {fileID: 1356994520223529498, guid: be258536bd1a8a0d9a484a213f915549, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
@@ -595,13 +613,26 @@ PrefabInstance:
       propertyPath: pitchForce
       value: 0.75
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 2505991862430491719, guid: be258536bd1a8a0d9a484a213f915549, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 708753044899929039, guid: be258536bd1a8a0d9a484a213f915549, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1969390131}
+    - targetCorrespondingSourceObject: {fileID: 708753044899929039, guid: be258536bd1a8a0d9a484a213f915549, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1969390147}
+    - targetCorrespondingSourceObject: {fileID: 708753044899929039, guid: be258536bd1a8a0d9a484a213f915549, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1969390139}
+    - targetCorrespondingSourceObject: {fileID: 708753044899929039, guid: be258536bd1a8a0d9a484a213f915549, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1969390138}
+    - targetCorrespondingSourceObject: {fileID: 708753044899929039, guid: be258536bd1a8a0d9a484a213f915549, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1969390140}
   m_SourcePrefab: {fileID: 100100000, guid: be258536bd1a8a0d9a484a213f915549, type: 3}
 --- !u!4 &1969390129 stripped
 Transform:
@@ -643,6 +674,82 @@ MonoBehaviour:
   m_DefaultActionMap: Missile
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
+--- !u!114 &1969390138
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1969390130}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4745e2e47289dab23bc39c79e5e5f2ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  agentParameters:
+    maxStep: 0
+  hasUpgradedFromAgentParameters: 1
+  MaxStep: 0
+  target: {fileID: 228666624415029370}
+  safeRadius: 1
+--- !u!114 &1969390139
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1969390130}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5d1c4e0b1822b495aa52bc52839ecb30, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_BrainParameters:
+    VectorObservationSize: 16
+    NumStackedVectorObservations: 1
+    m_ActionSpec:
+      m_NumContinuousActions: 0
+      BranchSizes: 01000000010000000100000001000000
+    VectorActionSize: 01000000010000000100000001000000
+    VectorActionDescriptions: []
+    VectorActionSpaceType: 0
+    hasUpgradedBrainParametersWithActionSpec: 1
+  m_Model: {fileID: 0}
+  m_InferenceDevice: 0
+  m_BehaviorType: 1
+  m_BehaviorName: Pathfinder
+  TeamId: 0
+  m_UseChildSensors: 1
+  m_UseChildActuators: 1
+  m_DeterministicInference: 0
+  m_ObservableAttributeHandling: 0
+--- !u!114 &1969390140
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1969390130}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3a5c9d521e5ef4759a8246a07d52221e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  DecisionPeriod: 5
+  DecisionStep: 0
+  TakeActionsBetweenDecisions: 1
+--- !u!114 &1969390147
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1969390130}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1265c316ccc04aa4a230ca837d0338ee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1985541152
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -709,6 +816,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 9c29d37b1859346b4a3599ae865fc73e, type: 3}
       propertyPath: m_Name
+      value: Boundary
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 9c29d37b1859346b4a3599ae865fc73e, type: 3}
+      propertyPath: m_TagString
       value: Boundary
       objectReference: {fileID: 0}
     m_RemovedComponents: []

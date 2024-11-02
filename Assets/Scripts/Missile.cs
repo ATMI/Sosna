@@ -38,6 +38,26 @@ public class Missile : MonoBehaviour
 		set => _roll = Mathf.Clamp(value, -1f, 1f);
 	}
 
+	public Vector3 Position => transform.position;
+	public Quaternion Rotation => transform.rotation;
+	public Vector3 LinearVelocity => _rb.linearVelocity;
+	public Vector3 AngularVelocity => _rb.angularVelocity;
+
+	public void Stop()
+	{
+		_throttle = 0;
+		_pitch = _yaw = _roll = 0;
+
+		_rb.linearVelocity = Vector3.zero;
+		_rb.angularVelocity = Vector3.zero;
+	}
+
+	public void Place(Vector3 position, Quaternion rotation)
+	{
+		_rb.position = position;
+		_rb.rotation = rotation;
+	}
+
 	private void Awake()
 	{
 		_rb = GetComponent<Rigidbody>();
