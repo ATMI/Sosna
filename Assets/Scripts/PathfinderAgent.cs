@@ -1,4 +1,3 @@
-using System;
 using Unity.MLAgents;
 using Unity.MLAgents.Actuators;
 using Unity.MLAgents.Sensors;
@@ -14,6 +13,7 @@ public class PathfinderAgent : Agent
 	private Environment _environment;
 	private MissileInput _input;
 	private Missile _missile;
+	private State _state;
 
 	private enum Action
 	{
@@ -21,6 +21,13 @@ public class PathfinderAgent : Agent
 		Pitch = 1,
 		Yaw = 2,
 		Roll = 3
+	}
+
+	private enum State
+	{
+		Running = 0,
+		Reached = 1,
+		Crashed = 2
 	}
 
 	protected override void Awake()
@@ -35,17 +42,13 @@ public class PathfinderAgent : Agent
 		Debug.DrawLine(transform.position, target.position, Color.blue);
 	}
 
-	private void OnCollisionEnter(Collision other)
-	{
-		var reward = other.gameObject.CompareTag("Target") ? 1f : -1f;
-		AddReward(reward);
-		EndEpisode();
-	}
+	private void OnCollisionEnter(Collision other) => Collision(other);
+	private void OnCollisionStay(Collision other) => Collision(other);
 
-	private void OnCollisionStay(Collision other)
+	private void Collision(Collision other)
 	{
-		EndEpisode();
-	} 
+		_state = other.gameObject.CompareTag("Target") ? State.Reached : State.Crashed;
+	}
 
 	public override void Heuristic(in ActionBuffers actionsOut)
 	{
@@ -60,22 +63,41 @@ public class PathfinderAgent : Agent
 
 	public override void CollectObservations(VectorSensor sensor)
 	{
-		var direction = target.position - transform.position;
-		sensor.AddObservation(_missile.Position / _environment.radius);
-		sensor.AddObservation(_missile.Rotation.eulerAngles);
-		sensor.AddObservation(_missile.LinearVelocity);
-		sensor.AddObservation(_missile.AngularVelocity);
-		sensor.AddObservation(direction.normalized);
-		sensor.AddObservation(direction.magnitude);
+		var distance = target.position - transform.position;
+		sensor.AddObservation(_missile.Forward); // 3
+		sensor.AddObservation(_missile.Up); // 3
+		sensor.AddObservation(_missile.Right); // 3
+		sensor.AddObservation(_missile.LinearDirection); // 3
+		sensor.AddObservation(_missile.LinearSpeed); // 1
+		sensor.AddObservation(_missile.AngularDirection); // 3
+		sensor.AddObservation(_missile.AngularSpeed); // 1
+		sensor.AddObservation(distance.normalized); // 3
+		sensor.AddObservation(distance.magnitude); // 1
 	}
 
 	public override void OnActionReceived(ActionBuffers actions)
 	{
+		switch (_state)
+		{
+			case State.Crashed:
+				AddReward(-100f);
+				EndEpisode();
+				return;
+			case State.Reached:
+				AddReward(+10f);
+				EndEpisode();
+				return;
+			case State.Running:
+			default:
+				break;
+		}
+
 		var continuousActions = actions.ContinuousActions;
 		_missile.Throttle = (continuousActions[(int)Action.Throttle] + 1f) / 2f;
 		_missile.Pitch = continuousActions[(int)Action.Pitch];
 		_missile.Yaw = continuousActions[(int)Action.Yaw];
 		_missile.Roll = continuousActions[(int)Action.Roll];
+		AddReward(-0.05f);
 	}
 
 	public override void OnEpisodeBegin()
@@ -88,6 +110,7 @@ public class PathfinderAgent : Agent
 			var overlaps = Physics.CheckSphere(position, safeRadius);
 			if (overlaps) continue;
 
+			_state = State.Running;
 			_missile.Place(position, rotation);
 			_missile.Stop();
 			return;
