@@ -22,3 +22,7 @@
 *.unityproj
 *.sln
 *.suo
+
+# ML-Agents
+/Assets/Train/results/*
+/Assets/Train/results.meta
