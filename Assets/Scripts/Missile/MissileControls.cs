@@ -3,14 +3,14 @@ using UnityEngine.InputSystem;
 
 namespace Missile
 {
-	[RequireComponent(typeof(Missile))]
-	public class Controls : MonoBehaviour
+	[RequireComponent(typeof(MissileBehaviour))]
+	public class MissileControls : MonoBehaviour
 	{
-		private Missile _missile;
+		private MissileBehaviour _missile;
 
 		private void Awake()
 		{
-			_missile = GetComponent<Missile>();
+			_missile = GetComponent<MissileBehaviour>();
 		}
 
 		private void OnThrottle(InputValue value)

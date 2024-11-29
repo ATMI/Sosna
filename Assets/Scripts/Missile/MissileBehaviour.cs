@@ -3,7 +3,7 @@ using UnityEngine;
 namespace Missile
 {
 	[RequireComponent(typeof(Rigidbody))]
-	public class Missile : MonoBehaviour
+	public class MissileBehaviour : MonoBehaviour
 	{
 		public float maxThrust;
 		public float pitchForce;

@@ -1,43 +1,28 @@
+using Missile;
 using Unity.MLAgents;
 using Unity.MLAgents.Actuators;
 using Unity.MLAgents.Sensors;
 using UnityEngine;
-using Input = Missile.Input;
 using Random = UnityEngine.Random;
 
 namespace Agents
 {
-	[RequireComponent(typeof(Missile.Missile))]
-	public class Pathfinder : Agent
+	[RequireComponent(typeof(MissileAgent))]
+	public class PathfinderAgent : Agent
 	{
 		public Transform target;
 		public float safeRadius;
 
 		private Environment _environment;
-		private Input _input;
-		private Missile.Missile _missile;
-		private State _state;
-
-		private enum Action
-		{
-			Throttle = 0,
-			Pitch = 1,
-			Yaw = 2,
-			Roll = 3
-		}
-
-		private enum State
-		{
-			Running = 0,
-			Reached = 1,
-			Crashed = 2
-		}
+		private MissileInput _input;
+		private MissileBehaviour _missile;
+		private MissileState _state;
 
 		protected override void Awake()
 		{
 			_environment = GetComponentInParent<Environment>();
-			_missile = GetComponent<Missile.Missile>();
-			_input = GetComponent<Input>();
+			_missile = GetComponent<MissileBehaviour>();
+			_input = GetComponent<MissileInput>();
 		}
 
 		private void LateUpdate()
@@ -50,7 +35,7 @@ namespace Agents
 
 		private void Collision(Collision other)
 		{
-			_state = other.gameObject.CompareTag("Target") ? State.Reached : State.Crashed;
+			_state = other.gameObject.CompareTag("Target") ? MissileState.Impact : MissileState.Crash;
 		}
 
 		public override void Heuristic(in ActionBuffers actionsOut)
@@ -58,10 +43,10 @@ namespace Agents
 			if (_input == null) return;
 
 			var continuousActions = actionsOut.ContinuousActions;
-			continuousActions[(int)Action.Throttle] = _input.Throttle * 2f - 1f;
-			continuousActions[(int)Action.Pitch] = _input.Pitch;
-			continuousActions[(int)Action.Yaw] = _input.Yaw;
-			continuousActions[(int)Action.Roll] = _input.Roll;
+			continuousActions[(int)MissileAction.Throttle] = _input.Throttle * 2f - 1f;
+			continuousActions[(int)MissileAction.Pitch] = _input.Pitch;
+			continuousActions[(int)MissileAction.Yaw] = _input.Yaw;
+			continuousActions[(int)MissileAction.Roll] = _input.Roll;
 		}
 
 		public override void CollectObservations(VectorSensor sensor)
@@ -82,24 +67,24 @@ namespace Agents
 		{
 			switch (_state)
 			{
-				case State.Crashed:
+				case MissileState.Crash:
 					AddReward(-100f);
 					EndEpisode();
 					return;
-				case State.Reached:
+				case MissileState.Impact:
 					AddReward(+10f);
 					EndEpisode();
 					return;
-				case State.Running:
+				case MissileState.Fly:
 				default:
 					break;
 			}
 
 			var continuousActions = actions.ContinuousActions;
-			_missile.Throttle = (continuousActions[(int)Action.Throttle] + 1f) / 2f;
-			_missile.Pitch = continuousActions[(int)Action.Pitch];
-			_missile.Yaw = continuousActions[(int)Action.Yaw];
-			_missile.Roll = continuousActions[(int)Action.Roll];
+			_missile.Throttle = (continuousActions[(int)MissileAction.Throttle] + 1f) / 2f;
+			_missile.Pitch = continuousActions[(int)MissileAction.Pitch];
+			_missile.Yaw = continuousActions[(int)MissileAction.Yaw];
+			_missile.Roll = continuousActions[(int)MissileAction.Roll];
 			AddReward(-0.05f);
 		}
 
@@ -113,7 +98,7 @@ namespace Agents
 				var overlaps = Physics.CheckSphere(position, safeRadius);
 				if (overlaps) continue;
 
-				_state = State.Running;
+				_state = MissileState.Fly;
 				_missile.Place(position, rotation);
 				_missile.Stop();
 				return;

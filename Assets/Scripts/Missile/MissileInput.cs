@@ -3,7 +3,7 @@ using UnityEngine.InputSystem;
 
 namespace Missile
 {
-	public class Input : MonoBehaviour
+	public class MissileInput : MonoBehaviour
 	{
 		private void OnThrottle(InputValue value)
 		{
