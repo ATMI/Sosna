@@ -1,11 +1,14 @@
 using UnityEngine;
 
-public class TrackObject : MonoBehaviour
+namespace Camera
 {
-	public Transform target;
-
-	private void FixedUpdate()
+	public class TrackObject : MonoBehaviour
 	{
-		transform.LookAt(target);
+		public Transform target;
+
+		private void FixedUpdate()
+		{
+			transform.LookAt(target);
+		}
 	}
 }

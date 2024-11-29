@@ -1,23 +1,26 @@
 using UnityEngine;
 
-public class ZoomObject : MonoBehaviour
+namespace Camera
 {
-	public Transform target;
-	public float radiusFov;
-	public float minFov;
-	public float maxFov;
-
-	private Camera _camera;
-
-	private void Awake()
+	public class ZoomObject : MonoBehaviour
 	{
-		_camera = GetComponent<Camera>();
-	}
+		public Transform target;
+		public float radiusFov;
+		public float minFov;
+		public float maxFov;
 
-	private void FixedUpdate()
-	{
-		var distance = target.position - _camera.transform.position;
-		var angle = Mathf.Atan2(radiusFov, distance.magnitude) * Mathf.Rad2Deg;
-		_camera.fieldOfView = Mathf.Clamp(angle, minFov, maxFov);
+		private UnityEngine.Camera _camera;
+
+		private void Awake()
+		{
+			_camera = GetComponent<UnityEngine.Camera>();
+		}
+
+		private void FixedUpdate()
+		{
+			var distance = target.position - _camera.transform.position;
+			var angle = Mathf.Atan2(radiusFov, distance.magnitude) * Mathf.Rad2Deg;
+			_camera.fieldOfView = Mathf.Clamp(angle, minFov, maxFov);
+		}
 	}
 }
