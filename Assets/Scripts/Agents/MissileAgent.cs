@@ -10,9 +10,9 @@ namespace Agents
 		public Transform target;
 		public float safeRadius;
 
-		public float crashReward = -100;
-		public float impactReward = +10;
-		public float tickReward = -0.05f;
+		public float crashReward = -10000;
+		public float impactReward = +1000;
+		// public float tickReward = -0.05f;
 
 		private Environment _environment;
 		private MissileInput _input;
@@ -82,7 +82,11 @@ namespace Agents
 			Missile.Yaw = continuousActions[(int)MissileAction.Yaw];
 			Missile.Roll = continuousActions[(int)MissileAction.Roll];
 
-			AddReward(tickReward);
+			OnActionReward();
+		}
+
+		protected virtual void OnActionReward()
+		{
 		}
 
 		private void OnCollisionEnter(Collision other) => Collision(other);

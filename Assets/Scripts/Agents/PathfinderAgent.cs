@@ -28,9 +28,14 @@ namespace Agents
 				: MissileState.Crash;
 		}
 
+		protected override void OnActionReward()
+		{
+			AddReward(-0.05f);
+		}
+
 		private void LateUpdate()
 		{
-			Debug.DrawLine(transform.position, target.position, Color.blue);
+			Debug.DrawLine(transform.position, target.position, Color.red);
 		}
 	}
 }
