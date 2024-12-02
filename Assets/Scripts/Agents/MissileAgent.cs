@@ -1,7 +1,9 @@
+using System;
 using Missile;
 using Unity.MLAgents;
 using Unity.MLAgents.Actuators;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Agents
 {
@@ -10,8 +12,8 @@ namespace Agents
 		public Transform target;
 		public float safeRadius;
 
-		public float crashReward = -10000;
-		public float impactReward = +1000;
+		// public float crashReward = -10000;
+		// public float impactReward = +1000;
 		// public float tickReward = -0.05f;
 
 		private Environment _environment;
@@ -61,19 +63,10 @@ namespace Agents
 
 		public override void OnActionReceived(ActionBuffers actions)
 		{
-			switch (_state)
+			if (_state != MissileState.Fly)
 			{
-				case MissileState.Crash:
-					AddReward(crashReward);
-					EndEpisode();
-					return;
-				case MissileState.Impact:
-					AddReward(impactReward);
-					EndEpisode();
-					return;
-				case MissileState.Fly:
-				default:
-					break;
+				_environment.EndEpisode();
+				return;
 			}
 
 			var continuousActions = actions.ContinuousActions;
@@ -87,6 +80,26 @@ namespace Agents
 
 		protected virtual void OnActionReward()
 		{
+		}
+
+		public void OnEpisodeEnd()
+		{
+			switch (_state)
+			{
+				case MissileState.Fly:
+					AddReward(-1_000f);
+					break;
+				case MissileState.Crash:
+					AddReward(-10_000f);
+					break;
+				case MissileState.Impact:
+					AddReward(+1_000f);
+					break;
+				default:
+					throw new ArgumentOutOfRangeException();
+			}
+
+			EndEpisode();
 		}
 
 		private void OnCollisionEnter(Collision other) => Collision(other);

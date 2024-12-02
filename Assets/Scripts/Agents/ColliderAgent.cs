@@ -9,7 +9,6 @@ namespace Agents
 	{
 		private Rigidbody _missileBody;
 		private Rigidbody _targetBody;
-		private Vector3? _position;
 
 		protected override void Awake()
 		{
@@ -42,26 +41,14 @@ namespace Agents
 		public override void OnEpisodeBegin()
 		{
 			base.OnEpisodeBegin();
-			_position = null;
+			// some stuff that happens when episode begins
 		}
 
 		protected override void OnActionReward()
 		{
-			var position = _missileBody.position;
-
-			if (_position.HasValue)
-			{
-				var delta = position - _position.Value;
-				var direction = _targetBody.position - position;
-				
-				var approach = Vector3.Dot(delta, direction) / direction.magnitude;
-				var velocity = Vector3.Dot(_missileBody.linearVelocity, direction) / direction.magnitude;
-
-				AddReward(-5f + approach * velocity);
-				// Debug.Log(reward);
-			}
-
-			_position = position;
+			// calculating the reward after some action has happened
+			var reward = -100;
+			AddReward(reward);
 		}
 
 		protected override MissileState StateAfterCollision(Collision other)
