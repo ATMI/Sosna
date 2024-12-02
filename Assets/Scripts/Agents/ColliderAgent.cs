@@ -41,8 +41,11 @@ namespace Agents
 
 		protected override void OnActionReward()
 		{
-			var distance = Vector3.Distance(_missileBody.position, _targetBody.position);
-			AddReward(-distance);
+			var targetDirection = _targetBody.position - _missileBody.position;
+			var distance = targetDirection.magnitude;
+			var approach = Vector3.Dot(_missileBody.linearVelocity, targetDirection) / distance;
+
+			AddReward(-0.5f + approach - distance / 25f);
 		}
 
 		public override void OnEpisodeEnd()
@@ -61,6 +64,7 @@ namespace Agents
 				default:
 					throw new ArgumentOutOfRangeException();
 			}
+
 			EndEpisode();
 		}
 
