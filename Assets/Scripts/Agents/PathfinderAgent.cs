@@ -1,3 +1,4 @@
+using System;
 using Missile;
 using Unity.MLAgents.Sensors;
 using UnityEngine;
@@ -31,6 +32,24 @@ namespace Agents
 		protected override void OnActionReward()
 		{
 			AddReward(-0.05f);
+		}
+		
+		public override void OnEpisodeEnd()
+		{
+			switch (State)
+			{
+				case MissileState.Fly:
+					break;
+				case MissileState.Impact:
+					AddReward(100f);
+					break;
+				case MissileState.Crash:
+					AddReward(-1_000f);
+					break;
+				default:
+					throw new ArgumentOutOfRangeException();
+			}
+			EndEpisode();
 		}
 
 		private void LateUpdate()

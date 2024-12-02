@@ -1,4 +1,3 @@
-using System;
 using Missile;
 using Unity.MLAgents;
 using Unity.MLAgents.Actuators;
@@ -18,16 +17,16 @@ namespace Agents
 
 		private Environment _environment;
 		private MissileInput _input;
-		private MissileState _state;
 
+		protected MissileState State;
 		protected MissileBehaviour Missile;
 
 		protected override void Awake()
 		{
 			_environment = GetComponentInParent<Environment>();
 			_input = GetComponent<MissileInput>();
-			_state = MissileState.Fly;
 
+			State = MissileState.Fly;
 			Missile = GetComponent<MissileBehaviour>();
 		}
 
@@ -41,7 +40,7 @@ namespace Agents
 				var overlaps = Physics.CheckSphere(position, safeRadius);
 				if (overlaps) continue;
 
-				_state = MissileState.Fly;
+				State = MissileState.Fly;
 				Missile.Place(position, rotation);
 				Missile.Stop();
 				return;
@@ -63,7 +62,7 @@ namespace Agents
 
 		public override void OnActionReceived(ActionBuffers actions)
 		{
-			if (_state != MissileState.Fly)
+			if (State != MissileState.Fly)
 			{
 				_environment.EndEpisode();
 				return;
@@ -82,23 +81,8 @@ namespace Agents
 		{
 		}
 
-		public void OnEpisodeEnd()
+		public virtual void OnEpisodeEnd()
 		{
-			switch (_state)
-			{
-				case MissileState.Fly:
-					AddReward(-1_000f);
-					break;
-				case MissileState.Crash:
-					AddReward(-10_000f);
-					break;
-				case MissileState.Impact:
-					AddReward(+1_000f);
-					break;
-				default:
-					throw new ArgumentOutOfRangeException();
-			}
-
 			EndEpisode();
 		}
 
@@ -107,7 +91,7 @@ namespace Agents
 
 		private void Collision(Collision other)
 		{
-			_state = StateAfterCollision(other);
+			State = StateAfterCollision(other);
 		}
 
 		protected virtual MissileState StateAfterCollision(Collision other)

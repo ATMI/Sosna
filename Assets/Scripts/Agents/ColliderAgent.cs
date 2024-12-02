@@ -1,3 +1,4 @@
+using System;
 using Missile;
 using Unity.MLAgents.Sensors;
 using UnityEngine;
@@ -38,17 +39,29 @@ namespace Agents
 			sensor.AddObservation(_targetBody.angularVelocity.magnitude); // 1
 		}
 
-		public override void OnEpisodeBegin()
-		{
-			base.OnEpisodeBegin();
-			// some stuff that happens when episode begins
-		}
-
 		protected override void OnActionReward()
 		{
-			// calculating the reward after some action has happened
-			var reward = -100;
-			AddReward(reward);
+			var distance = Vector3.Distance(_missileBody.position, _targetBody.position);
+			AddReward(-distance);
+		}
+
+		public override void OnEpisodeEnd()
+		{
+			switch (State)
+			{
+				case MissileState.Fly:
+					AddReward(-1_000f);
+					break;
+				case MissileState.Crash:
+					AddReward(-10_000f);
+					break;
+				case MissileState.Impact:
+					AddReward(+1_000f);
+					break;
+				default:
+					throw new ArgumentOutOfRangeException();
+			}
+			EndEpisode();
 		}
 
 		protected override MissileState StateAfterCollision(Collision other)
