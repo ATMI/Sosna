@@ -1,4 +1,3 @@
-using System;
 using Missile;
 using Unity.MLAgents.Sensors;
 using UnityEngine;
@@ -8,61 +7,67 @@ namespace Agents
 	[RequireComponent(typeof(MissileBehaviour))]
 	public class PathfinderAgent : MissileAgent
 	{
+		// private Vector3 _prevPosition;
+
+		#region Observation
+
 		public override void CollectObservations(VectorSensor sensor)
 		{
-			var distance = target.position - transform.position;
-			sensor.AddObservation(Missile.Forward); // 3
-			sensor.AddObservation(Missile.Up); // 3
-			sensor.AddObservation(Missile.Right); // 3
-			sensor.AddObservation(Missile.LinearDirection); // 3
-			sensor.AddObservation(Missile.LinearSpeed); // 1
-			sensor.AddObservation(Missile.AngularDirection); // 3
-			sensor.AddObservation(Missile.AngularSpeed); // 1
-			sensor.AddObservation(distance.normalized); // 3
-			sensor.AddObservation(distance.magnitude); // 1
+			var localLinearVelocity = transform.InverseTransformDirection(LinearVelocity);
+			var localAngularVelocity = transform.InverseTransformDirection(AngularVelocity);
+			var localLinearAcceleration = transform.InverseTransformDirection(LinearAcceleration);
+			var localAngularAcceleration = transform.InverseTransformDirection(AngularAcceleration);
+			var localDirection = transform.InverseTransformDirection(TargetPosition - Position);
+
+			// sensor.AddObservation(Forward); // 3
+			// sensor.AddObservation(Up); // 3
+			// sensor.AddObservation(Right); // 3
+			sensor.AddObservation(localLinearVelocity.normalized); // 3
+			sensor.AddObservation(localLinearVelocity.magnitude); // 1
+			sensor.AddObservation(localLinearAcceleration.normalized); // 3
+			sensor.AddObservation(localLinearAcceleration.magnitude); // 1
+			sensor.AddObservation(localAngularVelocity.normalized); // 3
+			sensor.AddObservation(localAngularVelocity.magnitude); // 1
+			sensor.AddObservation(localAngularAcceleration.normalized); // 3
+			sensor.AddObservation(localAngularVelocity.magnitude); // 1
+			sensor.AddObservation(localDirection.normalized); // 3
+			sensor.AddObservation(localDirection.magnitude); // 1
 		}
 
-		protected override MissileState StateAfterCollision(Collision other)
+		#endregion
+
+		#region Reward
+
+		// public override void OnEpisodeBegin()
+		// {
+			// base.OnEpisodeBegin();
+			// _prevPosition = transform.position;
+		// }
+
+		protected override void StepReward()
 		{
-			return other.gameObject.CompareTag("Target")
-				? MissileState.Impact
-				: MissileState.Crash;
+			// var direction = TargetPosition - Position;
+			// var delta = Position - _prevPosition;
+			// _prevPosition = Position;
+
+			// var distance = direction.magnitude;
+			// var projection = Vector3.Dot(delta, direction) / distance;
+
+			// AddReward(100 * projection - 0.1f);
+
+			var distance = Vector3.Distance(Position, TargetPosition);
+			var reward = -distance / Environment.radius;
+			AddReward(reward);
 		}
 
-		protected override void OnActionReward()
+		protected override void EndReward()
 		{
-			var direction = target.position - transform.position;
-			var distance = direction.magnitude;
-			var projection = Vector3.Dot(Rb.linearVelocity, direction) / distance;
-			AddReward(projection + 1 / distance);
+			var reward = Collision?.gameObject?.CompareTag("Target") ?? false
+				? +10_000
+				: -10_000;
+			AddReward(reward);
 		}
 
-		public override void OnEpisodeEnd()
-		{
-			switch (State)
-			{
-				case MissileState.Fly:
-					var distance = Vector3.Distance(transform.position, target.position);
-					AddReward(-distance);
-					break;
-				case MissileState.Crash:
-					AddReward(-1_000f);
-					break;
-				case MissileState.Impact:
-					AddReward(1_000f);
-					break;
-				default:
-					throw new ArgumentOutOfRangeException();
-			}
-
-			EndEpisode();
-			Environment.SpawnPathfinders();
-		}
-
-		protected override void LateUpdate()
-		{
-			base.LateUpdate();
-			Debug.DrawLine(transform.position, target.position, Color.red);
-		}
+		#endregion
 	}
 }

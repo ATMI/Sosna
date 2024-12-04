@@ -40,14 +40,6 @@ namespace Missile
 			set => _roll = Mathf.Clamp(value, -1f, 1f);
 		}
 
-		public Vector3 Forward => transform.forward;
-		public Vector3 Right => transform.right;
-		public Vector3 Up => transform.up;
-		public Vector3 LinearDirection => _rb.linearVelocity.normalized;
-		public float LinearSpeed => _rb.linearVelocity.magnitude;
-		public Vector3 AngularDirection => _rb.angularVelocity.normalized;
-		public float AngularSpeed => _rb.angularVelocity.magnitude;
-
 		public void Stop()
 		{
 			_throttle = 0;
