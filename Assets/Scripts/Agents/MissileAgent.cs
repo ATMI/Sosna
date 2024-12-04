@@ -2,7 +2,6 @@ using Missile;
 using Unity.MLAgents;
 using Unity.MLAgents.Actuators;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
 namespace Agents
 {
@@ -11,42 +10,73 @@ namespace Agents
 		public Transform target;
 		public float safeRadius;
 
-		// public float crashReward = -10000;
-		// public float impactReward = +1000;
-		// public float tickReward = -0.05f;
+		public Vector3 LinearAcceleration { get; private set; }
+		public Vector3 LinearVelocity { get; private set; }
 
-		private Environment _environment;
+		private LineRenderer _lineRenderer;
 		private MissileInput _input;
+		protected Rigidbody Rb;
 
+		protected Environment Environment;
 		protected MissileState State;
-		protected MissileBehaviour Missile;
+		public MissileBehaviour Missile { get; private set; }
 
 		protected override void Awake()
 		{
-			_environment = GetComponentInParent<Environment>();
+			_lineRenderer = GetComponent<LineRenderer>();
 			_input = GetComponent<MissileInput>();
+			Rb = GetComponent<Rigidbody>();
 
 			State = MissileState.Fly;
+			Environment = GetComponentInParent<Environment>();
 			Missile = GetComponent<MissileBehaviour>();
+		}
+
+		protected virtual void FixedUpdate()
+		{
+			var velocity = Rb.linearVelocity;
+			LinearAcceleration = (velocity - LinearVelocity) / Time.fixedDeltaTime;
+			LinearVelocity = velocity;
+		}
+
+		protected virtual void LateUpdate()
+		{
+			if (!_lineRenderer || !_lineRenderer.enabled) return;
+
+			const int n = 15;
+			const float timeStep = 0.1f;
+
+			var points = new Vector3[n];
+			var trajectory = GetTrajectory();
+
+			var i = 0;
+			for (float t = 0; i < n; ++i, t += timeStep)
+			{
+				points[i] = trajectory(t);
+			}
+
+			_lineRenderer.positionCount = n;
+			_lineRenderer.SetPositions(points);
+		}
+
+		public delegate Vector3 Trajectory(float t);
+
+		public Trajectory GetTrajectory()
+		{
+			return Trajectory;
+			Vector3 Trajectory(float t) => Rb.position + LinearVelocity * t + LinearAcceleration * (t * t / 2.0f);
 		}
 
 		public override void OnEpisodeBegin()
 		{
-			for (var i = 0; i < 100; i++)
-			{
-				var position = _environment.RandomPosition(safeRadius);
-				var rotation = Random.rotationUniform;
+			
+		}
 
-				var overlaps = Physics.CheckSphere(position, safeRadius);
-				if (overlaps) continue;
-
-				State = MissileState.Fly;
-				Missile.Place(position, rotation);
-				Missile.Stop();
-				return;
-			}
-
-			Debug.LogError("Failed to spawn at a random position");
+		public void Place(Vector3 position, Quaternion rotation)
+		{
+			State = MissileState.Fly;
+			Missile.Place(position, rotation);
+			Missile.Stop();
 		}
 
 		public override void Heuristic(in ActionBuffers actionsOut)
@@ -64,7 +94,7 @@ namespace Agents
 		{
 			if (State != MissileState.Fly)
 			{
-				_environment.EndEpisode();
+				OnEpisodeEnd();
 				return;
 			}
 

@@ -59,6 +59,7 @@ namespace Missile
 
 		public void Place(Vector3 position, Quaternion rotation)
 		{
+			transform.position = position;
 			_rb.position = position;
 			_rb.rotation = rotation;
 		}

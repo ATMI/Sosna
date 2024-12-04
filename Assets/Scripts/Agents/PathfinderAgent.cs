@@ -31,29 +31,37 @@ namespace Agents
 
 		protected override void OnActionReward()
 		{
-			AddReward(-0.05f);
+			var direction = target.position - transform.position;
+			var distance = direction.magnitude;
+			var projection = Vector3.Dot(Rb.linearVelocity, direction) / distance;
+			AddReward(projection + 1 / distance);
 		}
-		
+
 		public override void OnEpisodeEnd()
 		{
 			switch (State)
 			{
 				case MissileState.Fly:
-					break;
-				case MissileState.Impact:
-					AddReward(100f);
+					var distance = Vector3.Distance(transform.position, target.position);
+					AddReward(-distance);
 					break;
 				case MissileState.Crash:
 					AddReward(-1_000f);
 					break;
+				case MissileState.Impact:
+					AddReward(1_000f);
+					break;
 				default:
 					throw new ArgumentOutOfRangeException();
 			}
+
 			EndEpisode();
+			Environment.SpawnPathfinders();
 		}
 
-		private void LateUpdate()
+		protected override void LateUpdate()
 		{
+			base.LateUpdate();
 			Debug.DrawLine(transform.position, target.position, Color.red);
 		}
 	}
