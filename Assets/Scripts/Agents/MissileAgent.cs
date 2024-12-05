@@ -32,40 +32,20 @@ namespace Agents
 
 		protected Vector3 Position => transform.position;
 		protected Vector3 Forward => transform.forward;
-		protected Vector3 Right => transform.right;
-		protected Vector3 Up => transform.up;
 
 		#endregion
 
-		#region Linear velocity
+		#region Velocity
 
 		public Vector3 LinearVelocity => Body.linearVelocity;
-		protected Vector3 LinearVelocityDirection => LinearVelocity.normalized;
-		protected float LinearVelocityMagnitude => LinearVelocity.magnitude;
+		public Vector3 AngularVelocity => Body.angularVelocity;
 
 		#endregion
 
-		#region Linear acceleration
+		#region Acceleration
 
 		public Vector3 LinearAcceleration { get; private set; }
-		protected Vector3 LinearAccelerationDirection => LinearAcceleration.normalized;
-		protected float LinearAccelerationMagnitude => LinearAcceleration.magnitude;
-
-		#endregion
-
-		#region Angular acceleration
-
 		public Vector3 AngularAcceleration { get; private set; }
-		protected Vector3 AngularAccelerationDirection => AngularAcceleration.normalized;
-		protected float AngularAccelerationMagnitude => AngularAcceleration.magnitude;
-
-		#endregion
-
-		#region Angular velocity
-
-		protected Vector3 AngularVelocity => Body.angularVelocity;
-		protected Vector3 AngularVelocityDirection => AngularVelocity.normalized;
-		protected float AngularVelocityMagnitude => AngularVelocity.magnitude;
 
 		#endregion
 
@@ -212,12 +192,9 @@ namespace Agents
 			_lastAngularVelocity = angularVelocity;
 		}
 
-		public delegate Vector3 Trajectory(float t);
-
-		public Trajectory GetTrajectory()
+		public Vector3 PredictedPosition(float t)
 		{
-			return Trajectory;
-			Vector3 Trajectory(float t) => Body.position + LinearVelocity * t + LinearAcceleration * (t * t / 2.0f);
+			return Body.position + LinearVelocity * t + LinearAcceleration * (t * t / 2.0f);
 		}
 
 		#endregion
@@ -232,12 +209,11 @@ namespace Agents
 			const float timeStep = 0.1f;
 
 			var points = new Vector3[n];
-			var trajectory = GetTrajectory();
-
 			var i = 0;
+
 			for (float t = 0; i < n; ++i, t += timeStep)
 			{
-				points[i] = trajectory(t);
+				points[i] = PredictedPosition(t);
 			}
 
 			_lineRenderer.positionCount = n;

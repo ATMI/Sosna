@@ -55,17 +55,26 @@ namespace Agents
 
 			// AddReward(100 * projection - 0.1f);
 
-			var distance = Vector3.Distance(Position, TargetPosition);
-			var reward = -distance / Environment.radius;
+			var direction = TargetPosition - Position;
+			var distance = direction.magnitude;
+			
+			var heading = Vector3.Dot(Forward, direction) / distance;
+			var reward = -distance / Environment.radius + heading / 5.0f;
+
 			AddReward(reward);
 		}
 
 		protected override void EndReward()
 		{
-			var reward = Collision?.gameObject?.CompareTag("Target") ?? false
-				? +10_000
-				: -10_000;
-			AddReward(reward);
+			switch (Collision?.gameObject?.tag)
+			{
+				case "Target":
+					AddReward(+10_000);
+					break;
+				case "Boundary":
+					AddReward(-10_000);
+					break;
+			}
 		}
 
 		#endregion
