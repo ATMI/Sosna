@@ -66,7 +66,7 @@ namespace Agents
 
 		protected override void EndReward()
 		{
-			switch (Collision?.gameObject?.tag)
+			switch (Collision?.tag)
 			{
 				case "Target":
 					AddReward(+10_000);

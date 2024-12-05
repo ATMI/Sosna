@@ -19,9 +19,8 @@ namespace Agents
 
 		protected Environment Environment;
 		protected MissileBehaviour Missile;
-		protected MissileState State;
 		protected Rigidbody Body;
-		[CanBeNull] protected Collision Collision;
+		[CanBeNull] protected GameObject Collision;
 
 		private Vector3 _lastLinearVelocity;
 		private Vector3 _lastAngularVelocity;
@@ -30,7 +29,7 @@ namespace Agents
 
 		#region Orientation
 
-		protected Vector3 Position => transform.position;
+		public Vector3 Position => transform.position;
 		protected Vector3 Forward => transform.forward;
 
 		#endregion
@@ -66,7 +65,6 @@ namespace Agents
 
 			Environment = GetComponentInParent<Environment>();
 			Missile = GetComponent<MissileBehaviour>();
-			State = MissileState.Fly;
 			Body = GetComponent<Rigidbody>();
 		}
 
@@ -88,8 +86,8 @@ namespace Agents
 
 		private void BeginEpisode()
 		{
-			var c = Environment.transform.position;
-			var r = Environment.radius;
+			var c = Environment.Center;
+			var r = Environment.radius - safeRadius;
 
 			for (var i = 0; i < 100; i++)
 			{
@@ -99,7 +97,6 @@ namespace Agents
 				var overlaps = Physics.CheckSphere(position, safeRadius);
 				if (overlaps) continue;
 
-				State = MissileState.Fly;
 				Missile.Place(position, rotation);
 				Missile.Stop();
 				return;
@@ -133,7 +130,7 @@ namespace Agents
 
 		public override void OnActionReceived(ActionBuffers actions)
 		{
-			if (State != MissileState.Fly)
+			if (Collision != null)
 			{
 				OnEpisodeEnd();
 				return;
@@ -172,9 +169,7 @@ namespace Agents
 
 		private void HandleCollision(Collision other)
 		{
-			if (Collision != null) return;
-			Collision = other;
-			OnEpisodeEnd();
+			Collision = other.gameObject;
 		}
 
 		#endregion

@@ -31,6 +31,7 @@ behaviors:
     time_horizon: 1000
     summary_freq: 10000
     threaded: true
+    init_path: /home/a/Projects/Sosna/Assets/Train/results/combined_01/Pathfinder/Pathfinder-5000003.pt
 
   Collider:
     trainer_type: ppo
