@@ -26,3 +26,6 @@
 # ML-Agents
 /Assets/Train/results/*
 /Assets/Train/results.meta
+
+# Latex
+/Assets/Report/build
