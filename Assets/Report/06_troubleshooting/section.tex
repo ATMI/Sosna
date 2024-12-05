@@ -1,0 +1,26 @@
+%! Author = a
+%! Date = 12/5/24
+
+After many attempts of training the collider without expected results, we turned back to the pathfinder.
+This time we didn't increase the size of the target and kept its edge equal to $\SI{1}{\metre}$.
+
+Of course, the initial reward would not work in this case, so we tried the reward functions designed for collider.
+Surprisingly, none of the rewards worked.
+
+This now seemed as an issue somewhere else.
+We tried tweaking hyperparameters of PPO, even switching to Soft Actor-Critic (SAC) didn't help.
+The only thing we hadn't checked until that moment was the observation vector.
+That was the pitfall\ldots
+
+Vectors we use for the observations reside in the world space.
+To avoid the disorientation problem, we also passed agent front, right, up vectors to the neural network.
+As the output, we expected the actions along the aircraft primary control axes.
+These axes are fixed to the aircraft.
+So, the actions along these axes are performed in the aircraft space.
+Therefore, neural network had to figure out the way to transform input vectors from the world space to the aircraft space.
+Apparently, it couldn't handle this task.
+
+As a solution, we are transforming all input vectors from the world space to the aircraft space.
+Front, up, and right vectors were removed from observations, as they became obsolete.
+
+After that we were able to train the pathfinder and collider easily. 

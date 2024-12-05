@@ -2,36 +2,77 @@
 %! Date = 12/5/24
 
 % Preamble
-\documentclass[11pt]{article}
+\documentclass[11pt, conference]{IEEEtran}
 
 % Packages
 \usepackage{amsmath}
+\usepackage{derivative}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{multicol}
+\usepackage{siunitx}
+\usepackage{float}
+\usepackage{tikz}
+
+\usetikzlibrary{3d}
+
+\newcommand{\linebreakand}{%
+	\end{@IEEEauthorhalign}
+	\hfill\mbox{}\par
+	\mbox{}\hfill\begin{@IEEEauthorhalign}
+}
 
 % Document
 \begin{document}
+	\title{SOSNA}
+	\author{
+		\IEEEauthorblockN{Miasoedov Artemii}
+		\IEEEauthorblockA{\textit{Innopolis University}\\ Innopolis, Russia \\ \href{mailto:a.miasoedov@innopolis.university}{a.miasoedov@innopolis.university}}
+		\and
+		\IEEEauthorblockN{Brayko Timofey}
+		\IEEEauthorblockA{\textit{Innopolis University}\\ Innopolis, Russia\\ \href{mailto:t.brayko@innopolis.university}{t.brayko@innopolis.university}}
+		\linebreakand
+		\IEEEauthorblockN{Artur Rakhmetov}
+		\IEEEauthorblockA{\textit{Innopolis University}\\ Innopolis, Russia \\ \href{mailto:a.rakhmetov@innopolis.university}{a.rakhmetov@innopolis.university}}
+		\and
+		\IEEEauthorblockN{Nikita Kurkulskiu}
+		\IEEEauthorblockA{\textit{Innopolis University}\\ Innopolis, Russia \\ \href{mailto:n.kurkulskiu@innopolis.university}{n.kurkulskiu@innopolis.university}}
+	}
 
-    Hello, World!
-
-    \section{Introduction}\label{sec:introduction}
-    \input{00_introduction/section}
-
-    \section{Environment}\label{sec:environment}
-    \input{01_environment/section}
-
-
-    \section{Agents}\label{sec:agents}
-    \input{02_agents/section}
-
-
-    \section{Initial Attempt}\label{sec:initital_attempt}
-    \input{03_initial_attempt/section}
-
-
-    \section{Troubleshooting}\label{sec:troubleshooting}
-    \input{04_troubleshooting/section}
+	\maketitle
 
 
-    \section{Results}\label{sec:results}
-    \input{05_results/section}
+	\section{Introduction}\label{sec:introduction}
+	\input{00_introduction/section}
 
+
+	\section{Environment}\label{sec:environment}
+	\input{01_environment/section}
+
+
+	\section{Agents}\label{sec:agents}
+	\input{02_agents/section}
+
+
+	\section{Setup}\label{sec:setup}
+	\input{03_setup/section}
+
+
+	\section{Pathfinder}\label{sec:pathfinder}
+	\input{04_pathfinder/section}
+
+
+	\section{Collider}\label{sec:collider}
+	\input{05_collider/section}
+
+
+	\section{Troubleshooting}\label{sec:troubleshooting}
+	\input{06_troubleshooting/section}
+	
+	\section{Results}\label{sec:results}
+	\input{07_results/section}
+	
+	\section{Future Work}\label{sec:future_work}
+	\input{08_future/section}
+	
 \end{document}

@@ -1,0 +1,87 @@
+%! Author = a
+%! Date = 12/5/24
+
+It was our first experience with Unity ML Agents, so we started with a simple agent, pathfinder.
+Pathfinder would operate in the environment solely, without a collider.
+
+\subsection{Objective}\label{subsec:pathfindr_objective}
+Pathfinder's goal is to reach the target in the center of the sphere from a random position.
+To simplify the task, we increased the target cube edge from $\SI{1}{\metre}$ to $\SI{10}{\metre}$.
+
+\subsection{Observations}\label{subsec:pathfinder_observations}
+For pathfinder to understand the direction to move,
+the observations must include the information about the target position and its current position.
+
+Instead of using two separate vectors, we have used a single vector with target position relative to the pathfinder,
+calculated as:
+\[
+	\vec{p} = \vec{p_t} - \vec{p_a}
+\] where:
+\begin{itemize}
+	\item $\vec{p_t}$ is the target position,
+	\item $\vec{p_a}$ is the agent position.
+\end{itemize}
+
+However, knowing only the relative position to the target is not enough.
+Pathfinder should understand which direction it is currently moving,
+so the linear and angular velocities are added to the observations.
+
+Finally, to maneuver, the agent should orient itself in the environment.
+For example, right turn of agent placed upside down will result in left turn in the environment.
+So, we have included front, right and up vectors of the agent to the observations.
+Notably, it is enough to include only a pair of linearly independent vectors to orient the object in 3D space.
+But we included all three orthogonal vectors, as we thought that it would help the agent to navigate better.
+
+The final observations include:
+\begin{itemize}
+	\item Target relative position
+	\item Agent linear velocity
+	\item Agent angular velocity
+	\item Agent front, right, and up vectors
+\end{itemize}
+
+\subsection{Actions}\label{subsec:pathfinder_actions}
+Set of controls:
+\begin{itemize}
+	\begin{multicols}{2}
+		\item Pitch
+		\item Yaw
+		\item Roll
+		\item Throttle
+	\end{multicols}
+\end{itemize}
+Actions along principal airplane axes are represented as real values from -1 to +1.
+Positive value corresponds to rotation in clockwise direction, negative -- counter-clockwise.
+Throttle is a real value from 0 to +1.
+
+\subsection{Reward}\label{subsec:pathfinder_reward}
+The reward was simple:
+\begin{itemize}
+	\item $-0.05$ — every time step
+	\item $-100$ — colliding with the boundaries
+	\item $+10$ — reaching the destination
+\end{itemize}
+The agent maximizes its reward, so it was trying to minimize the episode duration.
+However, ending the episode via self-destruction would lead to a significant penalty.
+So, environment exploration was the only option for the agent.
+Distance to the target was not used intentionally in the reward for the sake of interest.
+The target was relatively big, so even randomly wandering the agent would reach it sooner or later.
+
+\subsection{Neural Network}\label{subsec:pathfinder_neural-network}
+Neural network consisted of two hidden layers, each with 128 neurons.
+We trained it to approximate the policy, using the Proximal Policy Optimization, developed by John Schulman.
+Inputs included a single observation vector.
+Importantly, all 3D vector values, such as velocity, position, etc., were represented as four real values.
+Each vector can be represented as a co-directed unit vector multiplied by the magnitude:
+\[
+	\vec{v} = \frac{\vec{v}}{\left|\vec{v}\right|} \left|\vec{v}\right| = \vec{u} \left|\vec{v}\right|
+\]
+Such representation may lead to a better neural network performance,
+as it can help the neural network focus
+on learning the directional aspects without being biased by the scale of the vectors.
+
+\subsection{Results}\label{subsec:pathfinder_results}
+The neural network was able to approximate the optimal policy.
+The agent could successfully navigate from any point in the environment to the target.
+Moreover, as an experiment, we were manually moving the target during the inference.
+The agent was able to adjust its trajectory on the fly to reach the destination. 

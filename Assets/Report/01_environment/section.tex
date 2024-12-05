@@ -1,4 +1,18 @@
 %! Author = a
 %! Date = 12/5/24
 
-Environment section
+Some researchers have considered 2D environments in studies on similar topics.
+However, we conducted our experiments in a 3D environment, as this is the domain of the initial problem.
+
+The environment was bounded by a sphere of fixed radius.
+This was necessary to avoid the issue of agents moving too far from each other during training.
+The sphere was chosen for several reasons:
+
+\begin{enumerate}
+	\item It is one of the primitive 3D shapes.
+	\item Relative coordinates inside the sphere always cover the full range in all directions, varying from -1 to 1, for example.
+	This is not true for other primitives, which may affect neural network efficiency.
+	\item It allows for easy collision and out-of-bounds detection.
+\end{enumerate}
+
+The environment didn't include any intentionally placed obstacles, as we focus on aircraft-aircraft collision avoidance. 

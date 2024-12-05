@@ -1,4 +1,21 @@
 %! Author = a
 %! Date = 12/5/24
 
-Agent section
+At least two agents are required to simulate a near-collision case.
+So, we have identified two possible approaches of near-collision simulation.
+
+\subsection{Cooperative environment}\label{subsec:cooperative-environment}
+All agents are of the same type and are cooperating to solve the same problem: reach the destination without collisions.
+This approach has been widely studied by other researchers.
+
+\subsection{Aggressive environment}\label{subsec:agressive-environment}
+Agents of two types exist in this scenario.
+Their goals are opposite, so they are constantly competing with each other:
+\begin{itemize}
+	\item Evader — tries to reach destination avoiding any collisions.
+	\item Collider — intercepts the Evader on its way to the destination.
+\end{itemize}
+
+We opted for an aggressive environment.
+Competition between the agents might lead to more interesting solutions.
+Meanwhile, the agents in cooperative environment can get stuck in a local optima.

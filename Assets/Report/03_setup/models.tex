@@ -1,0 +1,46 @@
+%! Author = a
+%! Date = 12/5/24
+
+A $\SI{100}{\metre}$ sphere represented the environment boundaries.
+
+\begin{figure}[H]
+	\centering
+	\begin{tikzpicture}[scale=2.5]
+		\shade[ball color=lightgray, opacity=0.5] (0,0) circle (1.00); % Circle for the sphere
+		\draw[->] (-1.2,0,0) -- (1.25,0,0) node[anchor=north east] {$x$};
+		\draw[->] (0,-1.2,0) -- (0,1.25,0) node[anchor=north west] {$y$};
+		\draw[->] (0,0,-2.00) -- (0,0,2.25) node[anchor=south] {$z$};
+		\draw[|<->|, thick, red] (-0.71,+0.71,0) -- (+0.71,-0.71,0) node[end, below right]{$d=\SI{100}{\metre}$};
+
+		\coordinate (A) at (-0.01,-0.01,-0.01);
+		\coordinate (B) at (+0.01,-0.01,-0.01);
+		\coordinate (C) at (+0.01,+0.01,-0.01);
+		\coordinate (D) at (-0.01,+0.01,-0.01);
+		\coordinate (E) at (-0.01,-0.01,+0.01);
+		\coordinate (F) at (+0.01,-0.01,+0.01);
+		\coordinate (G) at (+0.01,+0.01,+0.01);
+		\coordinate (H) at (-0.01,+0.01,+0.01);
+
+		% Draw the edges of the cube
+		\draw[thick, green] (A) -- (B) -- (C) -- (D) -- cycle;
+		\draw[thick, green] (E) -- (F) -- (G) -- (H) -- cycle;
+		\draw[thick, green] (A) -- (E);
+		\draw[thick, green] (B) -- (F);
+		\draw[thick, green] (C) -- (G);
+		\draw[thick, green] (D) -- (H);
+
+		% Fill the faces of the cube with green color
+		\fill[green, opacity=0.3] (A) -- (B) -- (C) -- (D) -- cycle;
+		\fill[green, opacity=0.3] (E) -- (F) -- (G) -- (H) -- cycle;
+		\fill[green, opacity=0.3] (A) -- (B) -- (F) -- (E) -- cycle;
+		\fill[green, opacity=0.3] (B) -- (C) -- (G) -- (F) -- cycle;
+		\fill[green, opacity=0.3] (C) -- (D) -- (H) -- (G) -- cycle;
+		\fill[green, opacity=0.3] (D) -- (A) -- (E) -- (H) -- cycle;
+	\end{tikzpicture}
+	\caption{Environment}
+	\label{fig:environment}
+\end{figure}
+
+A small green target cube with a $\SI{1}{\metre}$ edge was placed in the center of the sphere.
+Evader agent's goal was to reach this cube.
+Evader and collider agents were represented as red and blue $\SI{1}{\metre}$ tetrahedrons.

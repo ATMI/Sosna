@@ -1,0 +1,13 @@
+%! Author = a
+%! Date = 12/5/24
+
+We were able to train two agents successfully, gaining valuable experience in the environment and reward design.
+However, we didn't have enough time to train the evader.
+The future work would include training the evader.
+We would like to try hierarchical reinforcement learning approach for the evader.
+It involves three neural networks:
+\begin{itemize}
+	\item Policy selector — determines which policy is used, either Guidance or Evasion
+	\item Guidance controller — guides the agent to the target
+	\item Evasion controller — prevents the collision
+\end{itemize}
