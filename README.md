@@ -93,9 +93,6 @@ reward is getting closer to 0.
 
 
 ## Demonstration
-![type:video](./Assets/Report/images/demo.mp4)
+![It should be a gif](Assets/Report/images/demo.gif)
 
-<video src="Assets/Report/images/demo.mp4" width="640" height="480" controls></video>
-
-
-[Here is the Report.](Assets/Report/images/demo.mp4)
+[Here is the Report.](Assets/Report/Report.pdf)
