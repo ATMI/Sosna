@@ -23,7 +23,9 @@ In 2023, NASA's Aviation Safety Reporting System
 recorded around 300 commercial aircraft near-collisions in the US.
 
 [//]: # (![]&#40;sosna_exp.png&#41;)
-<img src="Assets/Report/images/sosna_exp.png" alt="B" style="display:inline; width:55%;"/>
+<div style="text-align: center;">
+  <img src="Assets/Report/images/sosna_exp.png" alt="B" style="display:inline; width:55%;"/>
+</div>
 
 ## Approach
 In order to simulate airplane movements and interactions,
@@ -36,7 +38,11 @@ This boundary ensures that agents remain within a defined space,
 preventing them from moving too far apart during training.
 At the center of the sphere, green cube placed as target for the Pathfinder agent.
 
-![](Assets/Report/images/environment.png)
+[//]: # (![]&#40;Assets/Report/images/environment.png&#41;)
+<div style="text-align: center;">
+  <img src="Assets/Report/images/environment.png" alt="B" style="display:inline; width:55%;"/>
+</div>
+
 
 ### Agents:
 The system involves two types of agents, each with distinct roles:
@@ -74,8 +80,16 @@ intercepting it. Finally, collider reward reaches +10,000
 reward is getting closer to 0.
 
 
-![](Assets/Report/images/pathfinder_plot.png)
-![](Assets/Report/images/collider_plot.png)
+<div style="text-align: center;">
+  <img src="Assets/Report/images/pathfinder_plot.png" alt="B" style="display:inline; width:75%;"/>
+</div>
+
+<div style="text-align: center;">
+  <img src="Assets/Report/images/collider_plot.png" alt="B" style="display:inline; width:75%;"/>
+</div>
+
+[//]: # (![]&#40;Assets/Report/images/pathfinder_plot.png&#41;)
+[//]: # (![]&#40;Assets/Report/images/collider_plot.png&#41;)
 
 
 ## Demonstration
